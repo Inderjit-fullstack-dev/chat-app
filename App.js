@@ -1,39 +1,49 @@
-import { useCallback, useEffect, useState } from "react";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import "react-native-gesture-handler";
+import React, { useCallback, useEffect, useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import AppNavigator from "./navigation/AppNavigator";
+
+// Prevent the splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
-    // load fonts... side effect.
-    // mimicing delay
-    setTimeout(() => setAppIsReady(true), 1000);
-  });
+    const prepare = async () => {
+      try {
+        // Load fonts or other assets
+        await Font.loadAsync({
+          regular: require("./assets/fonts/Roboto-Regular.ttf"),
+        });
+      } catch (error) {
+        console.error("Error loading fonts:", error);
+      } finally {
+        setAppIsReady(true);
+      }
+    };
 
-  const onLayout = useCallback(async () => {
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
+      // Hide the splash screen once the app is ready
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
 
   if (!appIsReady) {
+    // Ensure the app doesn't render until everything is ready
     return null;
   }
 
   return (
-    <SafeAreaView style={styles.container} onLayout={onLayout}>
-      <Text>aaa</Text>
-    </SafeAreaView>
+    <SafeAreaProvider style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <AppNavigator />
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
