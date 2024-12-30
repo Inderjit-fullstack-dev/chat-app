@@ -7,7 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import AppNavigator from "./navigation/AppNavigator";
 
 // Prevent the splash screen from auto-hiding
-SplashScreen.preventAutoHideAsync();
+//SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -18,6 +18,7 @@ export default function App() {
         // Load fonts or other assets
         await Font.loadAsync({
           regular: require("./assets/fonts/Roboto-Regular.ttf"),
+          black: require("./assets/fonts/Roboto-Bold.ttf"),
         });
       } catch (error) {
         console.error("Error loading fonts:", error);
