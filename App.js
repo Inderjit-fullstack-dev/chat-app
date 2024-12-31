@@ -5,7 +5,8 @@ import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import AppNavigator from "./navigation/AppNavigator";
-
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 // Prevent the splash screen from auto-hiding
 //SplashScreen.preventAutoHideAsync();
 
@@ -43,8 +44,10 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <AppNavigator />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <AppNavigator />
+      </SafeAreaProvider>
+    </Provider>
   );
 }

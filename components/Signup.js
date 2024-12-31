@@ -2,9 +2,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SubmitButton from "./Button";
 import Input from "./Input";
-import { View } from "react-native";
+import { ActivityIndicator, Alert, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useDispatch } from "react-redux";
+import { registerUser } from "../cores/services/user.service";
+import { useState } from "react";
+import colors from "../colors";
+import { setUser } from "../store/slices/userSlice";
 const SignUp = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("Firstname is required"),
     lastName: Yup.string().required("Lastname is required"),
@@ -21,8 +29,17 @@ const SignUp = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setIsLoading(true);
+        const user = await registerUser(values);
+        dispatch(setUser(user));
+        setIsLoading(false);
+      } catch (error) {
+        Alert.alert(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
   return (
@@ -64,7 +81,15 @@ const SignUp = () => {
         autoCapitalize="none"
         formik={formik}
       />
-      <SubmitButton label="Register" onButtonClicked={formik.handleSubmit} />
+      {isLoading ? (
+        <ActivityIndicator
+          size={"small"}
+          style={{ marginVertical: 5 }}
+          color={colors.background}
+        />
+      ) : (
+        <SubmitButton label="Register" onButtonClicked={formik.handleSubmit} />
+      )}
     </View>
   );
 };

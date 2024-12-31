@@ -50,8 +50,8 @@ const styles = StyleSheet.create({
   switchAccount: {
     textAlign: "center",
     marginTop: 10,
-    color: colors.black,
-    fontFamily: "black",
+    color: colors.blue,
+    fontFamily: "regular",
     letterSpacing: 0.4,
     fontSize: 15,
   },
