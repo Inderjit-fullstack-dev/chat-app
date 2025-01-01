@@ -1,5 +1,9 @@
 import { getDatabaseInstance, getFirebaseApp } from "./firbase.services";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithCredential,
+} from "firebase/auth";
 import { ref, set } from "firebase/database";
 export const registerUser = async (request) => {
   const { firstName, lastName, email, password } = request;
@@ -29,6 +33,36 @@ export const registerUser = async (request) => {
   }
 };
 
+export const login = async (request) => {
+  const { email, password } = request;
+
+  const app = getFirebaseApp();
+  const auth = getAuth(app);
+  try {
+    const result = await signInWithCredential(auth, email, password);
+
+    return result;
+    // const { uid } = result.user;
+    // const { idToken, refreshToken } = result._tokenResponse;
+
+    // const userData = await createUser(
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   uid,
+    //   refreshToken
+    // );
+
+    // return { ...userData, token: idToken };
+  } catch (error) {
+    // let message = "something went wrong";
+    // if (error.code === "auth/email-already-in-use") {
+    //   message = "This email is already in use";
+    // }
+    throw new Error(error.message);
+  }
+};
+
 const createUser = async (firstName, lastName, email, userId, refreshToken) => {
   const db = getDatabaseInstance();
   const dbRef = ref(db, `users/${userId}`);
@@ -44,7 +78,7 @@ const createUser = async (firstName, lastName, email, userId, refreshToken) => {
 
   try {
     await set(dbRef, userData);
-    console.log("User data saved successfully:", userData);
+    return userData;
   } catch (error) {
     throw error;
   }

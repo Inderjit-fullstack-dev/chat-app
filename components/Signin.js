@@ -2,16 +2,9 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import SubmitButton from "./Button";
 import Input from "./Input";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-  KeyboardAvoidingView,
-} from "react-native";
+import { View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { login } from "../cores/services/user.service";
 
 const SignIn = () => {
   const validationSchema = Yup.object().shape({
@@ -24,8 +17,9 @@ const SignIn = () => {
       password: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      const result = await login(values);
+      console.log(result);
     },
   });
 

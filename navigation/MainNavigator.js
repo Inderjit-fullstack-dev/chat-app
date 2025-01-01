@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import ChatSettingsScreen from "../screens/ChatSettingsScreen";
 import ChatListScreen from "../screens/ChatListScreen";
 import SettingScreen from "../screens/SettingScreen";

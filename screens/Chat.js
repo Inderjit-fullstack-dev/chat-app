@@ -15,7 +15,6 @@ import colors from "../colors";
 const Chat = () => {
   const [message, setMessage] = useState("");
   const handleInputChange = (text) => {
-    console.log(text);
     setMessage(text);
   };
   return (

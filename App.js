@@ -7,6 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 import AppNavigator from "./navigation/AppNavigator";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
+
 // Prevent the splash screen from auto-hiding
 //SplashScreen.preventAutoHideAsync();
 

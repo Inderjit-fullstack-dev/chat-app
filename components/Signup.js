@@ -4,11 +4,13 @@ import SubmitButton from "./Button";
 import Input from "./Input";
 import { ActivityIndicator, Alert, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../cores/services/user.service";
 import { useState } from "react";
 import colors from "../colors";
 import { setUser } from "../store/slices/userSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -34,6 +36,8 @@ const SignUp = () => {
         setIsLoading(true);
         const user = await registerUser(values);
         dispatch(setUser(user));
+
+        await AsyncStorage.setItem("user", JSON.stringify(user));
         setIsLoading(false);
       } catch (error) {
         Alert.alert(error.message);
