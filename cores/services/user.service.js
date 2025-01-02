@@ -1,5 +1,5 @@
 import { getDatabaseInstance, getFirebaseApp } from "./firbase.services";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { child, get, ref, set } from "firebase/database";
 
 export const registerUser = async (request) => {
@@ -57,6 +57,13 @@ export const login = async (request) => {
     }
     throw new Error(message);
   }
+};
+
+export const logout = async () => {
+  const app = getFirebaseApp();
+  const auth = getAuth(app);
+  await signOut(auth);
+  return true;
 };
 
 const createUser = async (firstName, lastName, email, userId, refreshToken) => {

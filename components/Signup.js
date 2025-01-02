@@ -4,7 +4,7 @@ import SubmitButton from "./Button";
 import Input from "./Input";
 import { ActivityIndicator, Alert, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerUser } from "../cores/services/user.service";
 import { useState } from "react";
 import colors from "../colors";

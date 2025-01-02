@@ -4,13 +4,15 @@ import SubmitButton from "./Button";
 import Input from "./Input";
 import { ActivityIndicator, Alert, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { login } from "../cores/services/user.service";
-import { useState } from "react";
+import { login, logout } from "../cores/services/user.service";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setUser } from "../store/slices/userSlice";
+import { setDidTryAutoLogin, setUser } from "../store/slices/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
 
 const SignIn = () => {
+  const timerRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const validationSchema = Yup.object().shape({
@@ -28,6 +30,9 @@ const SignIn = () => {
       try {
         setLoading(true);
         const user = await login(values);
+        if (user) {
+          setAutoLogoutWhenTokenExpired(user.token);
+        }
         setLoading(false);
         dispatch(setUser(user));
         await AsyncStorage.setItem("user", JSON.stringify(user));
@@ -37,6 +42,29 @@ const SignIn = () => {
       }
     },
   });
+
+  const setAutoLogoutWhenTokenExpired = (token) => {
+    const decodedToken = jwtDecode(token);
+    if (decodedToken) {
+      // Clear any existing timer
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+
+      const expiryTime = decodedToken.exp;
+      const currentTime = Math.floor(Date.now() / 1000);
+      const milliseconds = Math.abs(expiryTime - currentTime) * 1000;
+
+      timerRef.current = setTimeout(async () => {
+        const result = await logout();
+        if (result) {
+          dispatch(setUser(null));
+          dispatch(setDidTryAutoLogin());
+          AsyncStorage.clear();
+        }
+      }, milliseconds);
+    }
+  };
 
   return (
     <View>
