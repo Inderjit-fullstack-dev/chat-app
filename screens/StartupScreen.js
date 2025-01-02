@@ -7,6 +7,12 @@ import { useDispatch } from "react-redux";
 import { setDidTryAutoLogin, setUser } from "../store/slices/userSlice";
 const StartupScreen = () => {
   const dispatch = useDispatch();
+
+  const resetState = async () => {
+    await AsyncStorage.clear();
+    dispatch(setUser(null));
+  };
+
   useEffect(() => {
     const checkToken = async () => {
       const user = await AsyncStorage.getItem("user");
@@ -20,7 +26,12 @@ const StartupScreen = () => {
 
             if (decodedToken.exp > currentTime) {
               dispatch(setUser(parsedUser));
+              return;
             }
+
+            dispatch(setDidTryAutoLogin());
+            resetState();
+            // if token is expired then remove token from async storage.
           } catch {
             dispatch(setDidTryAutoLogin());
           }
@@ -31,6 +42,7 @@ const StartupScreen = () => {
     };
     checkToken();
   }, []);
+
   return (
     <View
       style={{
