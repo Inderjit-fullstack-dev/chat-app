@@ -5,7 +5,7 @@ import Input from "./Input";
 import { ActivityIndicator, Alert, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { login, logout } from "../cores/services/user.service";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setDidTryAutoLogin, setUser } from "../store/slices/userSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";

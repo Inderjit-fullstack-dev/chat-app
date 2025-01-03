@@ -3,14 +3,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import colors from "../colors";
 
 const PageContainer = ({ children }) => {
-  return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;
+  return <View style={styles.container}>{children}</View>;
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: "10",
-    paddingVertical: "5",
+    paddingVertical: "10",
     backgroundColor: colors.white,
   },
 });
